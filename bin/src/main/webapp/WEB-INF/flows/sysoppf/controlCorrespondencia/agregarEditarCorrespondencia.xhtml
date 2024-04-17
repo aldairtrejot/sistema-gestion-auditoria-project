@@ -1,0 +1,164 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jstl/core"
+                template="/WEB-INF/views/templates/default/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form>
+                	<p:focus for="${correspondencia.id == null ? p:resolveFirstComponentWithId('inputanio_oficio', view).clientId : p:resolveFirstComponentWithId('inputanio_oficio', view).clientId}" />
+                	<p:growl autoUpdate="true" />
+                	<p:panel header="${correspondencia.id == null ? 'Agregar' : 'Editar'} Correspondencia"> 
+                			<p:panelGrid columns="2">
+                				
+                				<c:if test="true">								
+								<p:outputLabel for="@next" value="Núm. Turno" style="font-weight: bold;" />
+	                			<p:inputText id="num_turno_x" value="${catalogoC.impTurno(correspondencia.num_turno,cveNom)}" size="30" disabled="true" />
+
+								<p:outputLabel for="@next" value="Año" style="font-weight: bold"  />
+								<p:selectOneMenu value="#{correspondencia.anio_oficio}" disabled="${correspondencia.id != null}" style="width: 30% !important"  >
+								<p:ajax listener="#{catalogoC.cambioTurno(correspondencia.anio_oficio)}" update="num_turno_x"/>
+								<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" /> 	
+									<f:selectItems value="#{catalogoC.catAnioList}" />
+								</p:selectOneMenu>
+								</c:if>
+								
+								<c:if test="${UsuariosAdmin.usuarioAdmin()}">
+								<p:outputLabel for="id_area" value="Área" style="font-weight: bold" />
+								<p:selectOneMenu id="id_area" value="#{correspondencia.id_area_atension}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" style="width: 50% !important">
+									<p:ajax execute="id_area" listener="#{catalogoC.cambioUsuarios(correspondencia.id_area_atension)}" event="focus" process="@this" update="cat_area_usuarios"/>
+									<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoC.catAreaList}" />
+								</p:selectOneMenu>
+
+   								<p:outputLabel for="@next" value="Usuario" style="font-weight: bold"  />
+								<p:selectOneMenu id="cat_area_usuarios" value="#{correspondencia.id_usuario_resp}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" style="width: 30% !important">
+									<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoC.catUsuariosList}" />
+								</p:selectOneMenu>
+   								</c:if>
+   								
+								<c:if test="${!UsuariosAdmin.usuarioAdmin()}">
+                				<p:outputLabel for="@next" value="Área" style="font-weight: bold" />
+								<p:inputText value="${resultadoCatalogoC.CatalogoArea(correspondencia.id_area_atension)}" disabled="true" size="45" />
+
+								<p:outputLabel for="@next" value="Usuario" style="font-weight: bold"  />
+								<p:inputText value="${resultadoCatalogoC.CatalogoUsuarios(correspondencia.id_usuario_resp)}" disabled="true" size="45" />
+   								
+   								<p:outputLabel for="@next" value="Fecha Solicitud" style="font-weight: bold;" />
+	                			<p:calendar id="inputoffecha_solicitud" value="#{correspondencia.fecha_reg}" disabled="true" locale="es" mode="popup" size="45"/>
+	                			
+	                			<p:outputLabel for="@next" value="Fecha Término" style="font-weight: bold;" />
+	                			<p:calendar id="inputoffecha_termino" value="#{correspondencia.fec_vencimiento}" disabled="true" locale="es" mode="popup" size="45"/>
+   								</c:if>
+								
+								<p:outputLabel for="@next" value="Estatus" style="font-weight: bold"  />
+								<p:selectOneMenu value="#{correspondencia.id_estatus}" style="width: 30% !important" disabled="#{correspondencia.id_estatus == 3}" validator="#{validacion.cancelamiento}">
+									<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoC.catEstatusList}" />
+								</p:selectOneMenu>
+								
+								<p:outputLabel for="@next" value="Tipo Documento" style="font-weight: bold;" />
+								<p:selectOneMenu value="${correspondencia.num_expediente_ori}" style="width: 30% !important" disabled="#{!UsuariosAdmin.usuarioAdmin()}" validator="#{validacion.cancelamiento}">
+									<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoC.numOficio}" />
+								</p:selectOneMenu>
+								
+								<p:outputLabel for="@next" value="Núm. Documento" style="font-weight: bold;" />
+	                			<p:inputText id="inputnum_oficio" value="${correspondencia.num_oficio}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30">
+	                				<f:validateLength maximum="30"/>
+								</p:inputText>
+								
+								<p:outputLabel for="@next" value="Núm. Oficio Sol" style="font-weight: bold;" />
+	                			<p:inputText id="inputnum_oficio_x" value="${correspondencia.desc_boletin}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30">
+	                				<f:validateLength maximum="50"/>
+								</p:inputText>
+								
+								<p:outputLabel for="@next" value="Abogado Responsable" style="font-weight: bold"  />
+								<p:selectOneMenu value="#{correspondencia.id_enc}" disabled="false" style="width: 30% !important"  >
+								<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" /> 	
+									<f:selectItems value="#{catalogoC.catUsuariosAbogados}" />
+								</p:selectOneMenu>
+								
+								<c:if test="${UsuariosAdmin.usuarioAdmin()}">
+									<p:outputLabel for="@next" value="Fecha Solicitud" style="font-weight: bold;" />
+	                				<p:inputText  value="${catalogoC.FechaActual(correspondencia.fecha_reg)}" size="30" disabled="true" />
+
+	                				<p:outputLabel for="@next" value="Fecha Término" style="font-weight: bold;" />
+	                				<p:inputText id="idfechaX" value="${catalogoC.cambioFechaVen(correspondencia.fec_vencimiento)}" size="30" disabled="true" />
+								</c:if>
+								
+	                			<p:outputLabel for="@next" value="Turnos H" style="font-weight: bold;" />
+	                			<p:inputText id="inputbturnosf" value="${correspondencia.bturnosf}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30">
+	                				<f:validateLength maximum="10"/>
+								</p:inputText>
+	                			
+	                			<p:outputLabel for="@next" value="Núm. Original" style="font-weight: bold;" />
+	                			<p:inputText id="inputnum_original" value="${correspondencia.num_original}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30"/>
+	                			
+	                			<p:outputLabel for="@next" value="Núm. Fojas" style="font-weight: bold;" />
+	                			<p:inputText id="inputnum_fojas" value="${correspondencia.num_fojas}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30"/>
+	                			
+	                			<p:outputLabel for="@next" value="Núm. Copias" style="font-weight: bold;" />
+	                			<p:inputText id="inputnum_copia" value="${correspondencia.num_copia}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30"/>
+	                			
+	                			<p:outputLabel for="@next" value="Núm. Tomos" style="font-weight: bold;" />
+	                			<p:inputText id="inputnum_tomos" value="${correspondencia.num_tomos}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30"/>
+	                			
+	                			<p:outputLabel for="@next" value="RFC" style="font-weight: bold;" />
+	                			<p:inputText id="inputrfc" value="${correspondencia.rfc}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="30">
+	                				<f:validateLength maximum="13"/>
+								</p:inputText>
+
+								<p:outputLabel for="@next" value="Termino" style="font-weight: bold;" />
+	                			<p:inputText id="inputdesc_termino" value="${correspondencia.desc_termino}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="70">
+	                				<f:validateLength maximum="50"/>
+								</p:inputText>
+								
+								<p:outputLabel for="@next" value="Remitente" style="font-weight: bold;" />
+	                			<p:inputText id="inputremitente" value="${correspondencia.remitente}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="70">
+	                				<f:validateLength maximum="50"/>
+								</p:inputText>
+
+								<p:outputLabel for="@next" value="Cargo Remitente" style="font-weight: bold;" />
+								<p:inputText id="inputcargo_remitente" value="${correspondencia.cargo_remitente}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="70">
+	                				<f:validateLength maximum="150"/>
+								</p:inputText>
+	                			
+	                			<p:outputLabel for="@next" value="Lugar" style="font-weight: bold;" />
+								<p:inputText id="inputlugar" value="${correspondencia.lugar}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="70">
+	                				<f:validateLength maximum="150"/>
+								</p:inputText>
+
+								<p:outputLabel for="@next" value="Asunto" style="font-weight: bold;" />
+								<h:inputTextarea id="inputasunto" value="${correspondencia.asunto}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" cols="100" rows="3" 
+									style="font-family: Roboto,Helvetica Neue,sans-serif;border-color: #bdbdbd;">
+									<f:validateLength maximum="250"/>
+								</h:inputTextarea>
+								
+	                			<p:outputLabel for="@next" value="Desc. Observación" style="font-weight: bold;" />
+	                			<h:inputTextarea id="inputdesc_observacion1" value="${correspondencia.desc_observacion}" cols="110" rows="4" 
+									style="font-family: Roboto,Helvetica Neue,sans-serif;border-color: #bdbdbd;">
+									<f:validateLength maximum="255"/>
+								</h:inputTextarea>
+	                			
+	                		</p:panelGrid>
+                		
+                		<f:facet name="footer">
+                			<p:commandButton value="Guardar" action="guardar" icon="ui-icon-save" style="margin-right: 5px;" />
+                			<p:commandButton value="Cancelar" action="cancelar" icon="ui-icon-clear" immediate="true" style="margin-right: 5px;" />
+                		</f:facet>
+                	</p:panel>
+                	
+                	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                </h:form>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

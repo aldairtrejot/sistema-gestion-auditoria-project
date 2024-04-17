@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://saganet.com.mx/webflow/spring-webflow-2.0.xsd">
+
+<view-state id="listadoBusqueda">
+		<on-entry>
+			<evaluate expression="TblExpedienteC.nuevo()" result="viewScope.expediente" />
+		</on-entry>
+	
+		<transition on="buscar" to="listado">
+			<set name="flowScope.expedienteAux" value="viewScope.expediente" />
+		</transition>
+		
+		<transition on="limpiar" to="listadoBusqueda"/>
+	</view-state>
+
+	<view-state id="listado">
+		<on-entry>
+			<evaluate expression="TblExpedienteC.modelo(expedienteAux)" result="viewScope.modelo" />
+			<evaluate expression="TblExpedienteC.ObjectNull(viewScope.modelo.listado)" result="viewScope.bool" />
+		</on-entry>
+	
+		<transition on="agregar" to="agregarEditar">
+			<evaluate expression="TblExpedienteC.nuevo()" result="requestScope.expediente" />
+		</transition>
+		
+		<transition on="editar" to="agregarEditar">
+			<set name="requestScope.expediente" value="viewScope.modelo.seleccionado" />
+		</transition>
+		
+		<transition on="regresar" to="listadoBusqueda"/>
+	</view-state>
+	
+	<view-state id="agregarEditar">
+		<on-entry>
+			<set name="viewScope.cveNom" value="TblExpedienteC.getCveNom" />
+			<set name="viewScope.expediente" value="requestScope.expediente" />
+		</on-entry>
+		
+		<transition on="guardar" to="listado">
+			<evaluate expression="TblExpedienteC.guardar(viewScope.expediente)" />
+		</transition>
+		
+		<transition on="cancelar" to="listado" />
+	</view-state>
+	
+	<end-state id="terminarFlujo" />
+
+</flow>

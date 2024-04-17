@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bitacora_movimiento">
+	<cache />
+	
+	<resultMap type="BitacoraMovimientoEO" id="bitacora_movimiento">
+		<result column="BitacoraMovimientoEO_id_usuario" property="id_usuario" javaType="Integer"/>
+		<result column="BitacoraMovimientoEO_desc_tabla" property="desc_tabla" javaType="String"/>
+		<result column="BitacoraMovimientoEO_desc_accion" property="desc_accion" javaType="String"/>
+		<result column="BitacoraMovimientoEO_fecha_hora" property="fecha_hora" javaType="Date"/>
+	</resultMap>
+	
+	<insert id="agregar" parameterType="java.util.Map">
+		INSERT INTO bitacora_movimiento(id_usuario,desc_tabla,desc_accion,fecha_hora)
+		VALUES (#{id_usuario},'${nombreTabla}','${desc_accion}',NOW());
+	</insert>
+	
+</mapper>
+

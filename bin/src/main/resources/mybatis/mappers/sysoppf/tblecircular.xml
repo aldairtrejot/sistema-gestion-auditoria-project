@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tbl_circular">
+	<cache />
+	<resultMap type="TblCircularEO" id="tbl_circular">
+		<id column="TblCircularEO_id" property="id" javaType="Integer"/>
+		<result column="TblCircularEO_anio" property="anio" javaType="Integer"/>
+		<result column="TblCircularEO_num_circular" property="num_circular" javaType="String"/>
+		<result column="TblCircularEO_num_turno_orig" property="num_turno_orig" javaType="String"/>
+		<result column="TblCircularEO_remitente" property="remitente" javaType="String"/>
+		<result column="TblCircularEO_fecha_solicitud" property="fecha_solicitud" javaType="Date"/>
+		<result column="TblCircularEO_id_area" property="id_area" javaType="Integer"/>
+		<result column="TblCircularEO_id_usuario_sol" property="id_usuario_sol" javaType="Integer"/>
+		<result column="TblCircularEO_desc_observaciones" property="desc_observaciones" javaType="String"/>
+		<result column="TblCircularEO_fec_registro" property="fec_registro" javaType="Date"/>
+		<result column="TblCircularEO_desc_asunto" property="desc_asunto" javaType="String"/>
+		<result column="TblCircularEO_fecha_acuse" property="fecha_acuse" javaType="Date"/>
+	</resultMap>
+	
+	<sql id="fields">
+		TblCircularEO.id_circular					TblCircularEO_id,	
+		TblCircularEO.anio							TblCircularEO_anio,
+		TblCircularEO.num_circular					TblCircularEO_num_circular,
+		TblCircularEO.num_turno_orig				TblCircularEO_num_turno_orig,
+		TblCircularEO.fecha_solicitud				TblCircularEO_fecha_solicitud,
+		TblCircularEO.id_area						TblCircularEO_id_area,
+		TblCircularEO.remitente						TblCircularEO_remitente,
+		TblCircularEO.id_usuario_sol				TblCircularEO_id_usuario_sol,
+		TblCircularEO.desc_observaciones			TblCircularEO_desc_observaciones,
+		TblCircularEO.fec_registro					TblCircularEO_fec_registro,
+		TblCircularEO.desc_asunto					TblCircularEO_desc_asunto,
+		TblCircularEO.fecha_acuse					TblCircularEO_fecha_acuse
+	</sql>
+	
+	<sql id="table">
+		tbl_circular TblCircularEO
+	</sql>
+	
+	<sql id="query">
+		SELECT <include refid="fields" />
+		FROM <include refid="table" />
+	</sql>
+	
+	<select id="listado" resultMap="tbl_circular" parameterType="java.util.Map" >
+		 <include refid="query" />
+		 INNER JOIN <include refid="cat_area.table" />
+		 ON TblCircularEO.id_area = CatAreaEO.id_area
+		 INNER JOIN <include refid="user_sist_area.table" />
+		 ON CatAreaEO.id_area = UsuarioSysAreaEO.id_area
+		 INNER JOIN <include refid="usuarios.table" />
+		 ON UsuarioSysAreaEO.id_usuario = UsuarioEO.id_usuario
+		 WHERE UsuarioEO.id_usuario = #{usuarioSys}
+			 <if test = "fechaInicio != null and fechaFinal == null"> 
+ 				 WHERE fecha_solicitud = '${fechaInicio}'
+			</if>
+			<if test = "fechaInicio == null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud = '${fechaFinal}'
+			</if>
+			<if test = "fechaInicio != null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud BETWEEN '${fechaInicio}' AND '${fechaFinal}'
+			</if>
+		 ORDER BY TblCircularEO_id DESC
+	</select>
+	
+	<select id="listadoAdmin" resultMap="tbl_circular" parameterType="java.util.Map" >
+		 <include refid="query" />
+			 <if test = "fechaInicio != null and fechaFinal == null"> 
+ 				 WHERE fecha_solicitud = '${fechaInicio}'
+			</if>
+			<if test = "fechaInicio == null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud = '${fechaFinal}'
+			</if>
+			<if test = "fechaInicio != null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud BETWEEN '${fechaInicio}' AND '${fechaFinal}'
+			</if>
+		 ORDER BY TblCircularEO_id DESC
+	</select>
+	
+	<update id="editar" parameterType="TblCircularEO">
+		UPDATE tbl_circular
+		SET anio=#{anio},num_circular=#{num_circular},num_turno_orig=#{num_turno_orig},fecha_solicitud=#{fecha_solicitud},
+			id_area=#{id_area},remitente=#{remitente},id_usuario_sol=#{id_usuario_sol},desc_observaciones=#{desc_observaciones},
+			fec_registro=NOW(),desc_asunto=#{desc_asunto}, fecha_acuse=#{fecha_acuse}
+		WHERE id_circular = #{id}
+	</update>
+	
+	<insert id="agregar" parameterType="TblCircularEO">
+		INSERT INTO tbl_circular(anio,num_circular,num_turno_orig,fecha_solicitud,id_area,remitente,id_usuario_sol,
+									desc_observaciones,fec_registro,desc_asunto,fecha_acuse)
+		VALUES (#{anio},#{num_circular},#{num_turno_orig},#{fecha_solicitud},#{id_area},#{remitente},
+				#{id_usuario_sol},#{desc_observaciones},NOW(),#{desc_asunto},#{fecha_acuse});
+	</insert>
+
+
+</mapper>
+

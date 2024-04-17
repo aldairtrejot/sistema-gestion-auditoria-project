@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat_area">
+	<cache />
+	<resultMap type="CatAreaEO" id="cat_area">
+		<id column="CatAreaEO_id" property="id" javaType="Integer"/>
+		<result column="CatAreaEO_desc_area" property="desc_area" javaType="String"/>
+		<result column="CatAreaEO_status_activo" property="status_activo" javaType="String"/>
+	</resultMap>
+	
+	<sql id="table">
+		cat_area CatAreaEO
+	</sql>
+	
+	<sql id="fields">
+		CatAreaEO.id_area						CatAreaEO_id,
+		CatAreaEO.desc_area						CatAreaEO_desc_area,
+		CatAreaEO.status_activo					CatAreaEO_status_activo
+	</sql>
+	
+	<sql id="query">
+		SELECT <include refid="fields" />
+		FROM <include refid="table" />
+	</sql>
+	
+	<select id="listado" resultMap="cat_area" useCache="false">
+		<include refid="query" />
+		ORDER BY CatAreaEO_id ASC
+	</select>
+	
+	<select id="listadoString" resultType="String" parameterType="Integer">
+		SELECT CatAreaEO.desc_area
+		FROM <include refid="table" />
+		WHERE CatAreaEO.id_area = #{id}
+	</select>
+</mapper>
+

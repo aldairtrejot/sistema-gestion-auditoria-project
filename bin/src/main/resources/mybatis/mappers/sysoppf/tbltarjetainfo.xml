@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tbl_tarjetainfor">
+	<cache />
+	<resultMap type="TblTarjetaInfoEO" id="tbl_tarjetainfor">
+		<id column="TblTarjetaInfoEO_id" property="id" javaType="Integer"/>
+		<result column="TblTarjetaInfoEO_anio" property="anio" javaType="Integer"/>
+		<result column="TblTarjetaInfoEO_num_tarjeta" property="num_tarjeta" javaType="String"/>
+		<result column="TblTarjetaInfoEO_num_turno_orig" property="num_turno_orig" javaType="String"/>
+		<result column="TblTarjetaInfoEO_remitente" property="remitente" javaType="String"/>
+		<result column="TblTarjetaInfoEO_fecha_solicitud" property="fecha_solicitud" javaType="Date"/>
+		<result column="TblTarjetaInfoEO_id_area" property="id_area" javaType="Integer"/>
+		<result column="TblTarjetaInfoEO_id_usuario_sol" property="id_usuario_sol" javaType="Integer"/>
+		<result column="TblTarjetaInfoEO_desc_observaciones" property="desc_observaciones" javaType="String"/>
+		<result column="TblTarjetaInfoEO_fec_registro" property="fec_registro" javaType="Date"/>
+		<result column="TblTarjetaInfoEO_desc_asunto" property="desc_asunto" javaType="String"/>
+		<result column="TblTarjetaInfoEO_fecha_acuse" property="fecha_acuse" javaType="Date"/>
+	</resultMap>
+	
+	<sql id="fields">
+		TblTarjetaInfoEO.id_tarjeta					TblTarjetaInfoEO_id,	
+		TblTarjetaInfoEO.anio						TblTarjetaInfoEO_anio,
+		TblTarjetaInfoEO.num_tarjeta				TblTarjetaInfoEO_num_tarjeta,
+		TblTarjetaInfoEO.num_turno_orig				TblTarjetaInfoEO_num_turno_orig,
+		TblTarjetaInfoEO.fecha_solicitud			TblTarjetaInfoEO_fecha_solicitud,
+		TblTarjetaInfoEO.id_area					TblTarjetaInfoEO_id_area,
+		TblTarjetaInfoEO.remitente					TblTarjetaInfoEO_remitente,
+		TblTarjetaInfoEO.id_usuario_sol				TblTarjetaInfoEO_id_usuario_sol,
+		TblTarjetaInfoEO.desc_observaciones			TblTarjetaInfoEO_desc_observaciones,
+		TblTarjetaInfoEO.fec_registro				TblTarjetaInfoEO_fec_registro,
+		TblTarjetaInfoEO.desc_asunto				TblTarjetaInfoEO_desc_asunto,
+		TblTarjetaInfoEO.fecha_acuse				TblTarjetaInfoEO_fecha_acuse
+	</sql>
+	
+	<sql id="table">
+		tbl_tarjetainfor TblTarjetaInfoEO
+	</sql>
+	
+	<sql id="query">
+		SELECT <include refid="fields" />
+		FROM <include refid="table" />
+	</sql>
+	
+	<select id="listado" resultMap="tbl_tarjetainfor" parameterType="java.util.Map" >
+		 <include refid="query" />
+		 INNER JOIN <include refid="cat_area.table" />
+		 ON TblTarjetaInfoEO.id_area = CatAreaEO.id_area
+		 INNER JOIN <include refid="user_sist_area.table" />
+		 ON CatAreaEO.id_area = UsuarioSysAreaEO.id_area
+		 INNER JOIN <include refid="usuarios.table" />
+		 ON UsuarioSysAreaEO.id_usuario = UsuarioEO.id_usuario
+		 WHERE UsuarioEO.id_usuario = #{usuarioSys}
+			  <if test = "fechaInicio != null and fechaFinal == null"> 
+ 				 WHERE fecha_solicitud = '${fechaInicio}'
+			</if>
+			<if test = "fechaInicio == null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud = '${fechaFinal}'
+			</if>
+			<if test = "fechaInicio != null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud BETWEEN '${fechaInicio}' AND '${fechaFinal}'
+			</if>
+		 ORDER BY TblTarjetaInfoEO_id DESC
+	</select>
+	
+	<select id="listadoAdmin" resultMap="tbl_tarjetainfor" parameterType="java.util.Map" >
+		 <include refid="query" />
+			 <if test = "fechaInicio != null and fechaFinal == null"> 
+ 				 WHERE fecha_solicitud = '${fechaInicio}'
+			</if>
+			<if test = "fechaInicio == null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud = '${fechaFinal}'
+			</if>
+			<if test = "fechaInicio != null and fechaFinal != null"> 
+ 				 WHERE fecha_solicitud BETWEEN '${fechaInicio}' AND '${fechaFinal}'
+			</if>
+		 ORDER BY TblTarjetaInfoEO_id DESC
+	</select>
+	
+	<update id="editar" parameterType="TblTarjetaInfoEO">
+		UPDATE tbl_tarjetainfor
+		SET anio=#{anio},num_tarjeta=#{num_tarjeta},num_turno_orig=#{num_turno_orig},fecha_solicitud=#{fecha_solicitud},
+			id_area=#{id_area},remitente=#{remitente},id_usuario_sol=#{id_usuario_sol},desc_observaciones=#{desc_observaciones},
+			desc_asunto=#{desc_asunto},fec_registro=NOW(),fecha_acuse=#{fecha_acuse}
+		WHERE id_tarjeta = #{id}
+	</update>
+	
+	<insert id="agregar" parameterType="TblTarjetaInfoEO">
+		INSERT INTO tbl_tarjetainfor(anio,num_tarjeta,num_turno_orig,fecha_solicitud,id_area,remitente,id_usuario_sol,
+									desc_observaciones,fec_registro,desc_asunto,fecha_acuse)
+		VALUES (#{anio},#{num_tarjeta},#{num_turno_orig},#{fecha_solicitud},#{id_area},#{remitente},
+				#{id_usuario_sol},#{desc_observaciones},NOW(),#{desc_asunto},#{fecha_acuse});
+	</insert>
+
+
+</mapper>
+

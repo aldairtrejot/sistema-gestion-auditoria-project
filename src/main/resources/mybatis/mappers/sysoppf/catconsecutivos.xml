@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat_consecutivos">
+	<cache />
+	<resultMap type="CatConsecutivosEO" id="cat_consecutivos">
+		<id column="CatConsecutivosEO_id" property="id" javaType="Integer"/>
+		<result column="CatConsecutivosEO_cve_nomenglatura" property="cve_nomenglatura" javaType="String"/>
+		<result column="CatConsecutivosEO_cve_correspondencia" property="cve_correspondencia" javaType="String"/>
+		<result column="CatConsecutivosEO_desc_corrrespondencia" property="desc_corrrespondencia" javaType="String"/>
+		<result column="CatConsecutivosEO_num_consecutivo" property="num_consecutivo" javaType="Integer"/>
+		<result column="CatConsecutivosEO_anio" property="anio" javaType="Integer"/>
+	</resultMap>
+	
+	<sql id="table">
+		cat_consecutivos CatConsecutivosEO
+	</sql>
+	
+	<sql id="fields">
+		CatConsecutivosEO.id_consecutivo		CatConsecutivosEO_id,
+		CatConsecutivosEO.cve_nomenglatura		CatConsecutivosEO_cve_nomenglatura,
+		CatConsecutivosEO.cve_correspondencia	CatConsecutivosEO_cve_correspondencia,
+		CatConsecutivosEO.desc_corrrespondencia	CatConsecutivosEO_desc_corrrespondencia,
+		CatConsecutivosEO.num_consecutivo		CatConsecutivosEO_num_consecutivo,
+		CatConsecutivosEO.anio					CatConsecutivosEO_anio
+	</sql>
+	
+	<sql id="query">
+		SELECT <include refid="fields" />
+		FROM <include refid="table" />
+	</sql>
+	
+	<select id="listadoNomenglatura" resultType="String" parameterType="java.util.Map" useCache="false">
+		 SELECT CatConsecutivosEO.cve_nomenglatura
+		 FROM <include refid="table" />
+		 WHERE anio = #{anio}
+		 AND cve_nomenglatura = '${cveNomenglatura}'
+	</select>
+	
+	<select id="listaConsecutivo" resultType="Integer" parameterType="java.util.Map" useCache="false">
+		 SELECT CatConsecutivosEO.num_consecutivo
+		 FROM <include refid="table" />
+		 WHERE anio = #{anio}
+		 AND cve_nomenglatura = '${cveNomenglatura}'
+	</select>
+	
+	<select id="listadoAnio" resultMap="cat_consecutivos" useCache="false">
+		SELECT DISTINCT <include refid="fields" />
+		FROM <include refid="table" />
+		ORDER BY CatConsecutivosEO_anio DESC
+	</select>
+	
+	<update id="editarConsecutivo" parameterType="java.util.Map">
+		UPDATE cat_consecutivos
+		SET num_consecutivo=#{num}
+		WHERE anio = #{anio}
+		AND cve_nomenglatura = '${cveNomenglatura}'
+	</update>
+
+
+</mapper>
+

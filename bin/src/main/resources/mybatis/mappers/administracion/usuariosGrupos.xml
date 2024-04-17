@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="usuariosGrupos">
+	<cache />
+	
+	<select id="usuariosPorGrupo" parameterType="GrupoEO" resultMap="usuarios.usuario">
+		SELECT <include refid="usuarios.fields" />
+		FROM <include refid="usuarios.table" />
+		JOIN usuarios_grupos UsuariosGrupos USING(nick)
+		WHERE UsuariosGrupos.id_grupo = #{id}
+		ORDER BY <include refid="usuarios.orderByFields" /> 
+	</select>
+	
+	<insert id="insertar" parameterType="hashmap">
+		INSERT INTO usuarios_grupos(nick, id_grupo)
+		<foreach collection="usuarios" open="VALUES" separator="," item="usuario">
+			(#{usuario.nick}, #{grupo.id})
+		</foreach>
+	</insert>
+	
+	<insert id="insertarUno" parameterType="hashmap">
+		INSERT INTO usuarios_grupos(nick, id_grupo)
+		values(#{usuario.nick}, #{grupo.id})
+	</insert>
+	
+	<delete id="eliminarPorGrupo" parameterType="GrupoEO">
+		DELETE FROM usuarios_grupos
+		WHERE id_grupo = #{id}
+	</delete>
+
+</mapper>

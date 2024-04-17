@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user_sol_area">
+	<cache />
+	<resultMap type="UserSolAreaEO" id="user_sol_area">
+		<result column="UserSolAreaEO_id_usuario_sol" property="id_usuario_sol" javaType="Integer"/>
+		<result column="UserSolAreaEO_id_area" property="id_area" javaType="Integer"/>
+	</resultMap>
+	
+	<sql id="fields">
+		UserSolAreaEO.id_usuario_sol		UserSolAreaEO_id_usuario_sol,
+		UserSolAreaEO.id_area				UserSolAreaEO_id_area
+	</sql>
+	
+	<sql id="table">
+		user_sol_area UserSolAreaEO
+	</sql>
+	
+</mapper>
+

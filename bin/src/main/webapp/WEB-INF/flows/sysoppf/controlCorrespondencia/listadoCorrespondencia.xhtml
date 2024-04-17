@@ -1,0 +1,213 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/views/templates/default/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form>
+                	<p:panel id="panelCorrespondencia" header="Control de Correspondencia">
+                	
+                	<p:panel>
+                		<p:commandButton value="Regresar" action="regresar" icon="ui-icon-triangle-1-w" style="margin-right: 5px;" />
+                		<c:if test="#{UsuariosAdmin.usuarioAdmin() and bool}">
+							<p:commandButton value="Agregar" action="agregar" icon="ui-icon-add" style="margin-right: 5px;" />
+                			<p:commandButton value="Modificar" action="editar" icon="ui-icon-edit" style="margin-right: 5px;" />
+                			<p:commandButton value="Cancelar" action="cancelar" icon="ui-icon-alert" style="margin-right: 5px;" />
+                			<p:commandButton value="Reporte" action="reporte" icon="ui-icon-document" style="margin-right: 5px;" />
+   						</c:if>
+   						<c:if test="#{UsuariosAdmin.usuarioAdmin() and !bool}">
+							<p:commandButton value="Agregar" action="agregar" icon="ui-icon-add" style="margin-right: 5px;" />
+   						</c:if>
+   						<c:if test="#{!UsuariosAdmin.usuarioAdmin() and bool}">
+                			<p:commandButton value="Modificar" action="editar" icon="ui-icon-edit" style="margin-right: 5px;" />
+   						</c:if>
+                	</p:panel>
+                	
+                	
+                	
+                	
+                		<p:dataTable value="${modelo.listado}" var="fila" emptyMessage="Sin Resultados"
+                			rowKey="${fila.id}" selection="${modelo.seleccionado}" selectionMode="single"
+                			paginator="true" rows="15" paginatorAlwaysVisible="false" paginatorPosition="both">
+                			
+                			<p:column headerText="Núm. Turno" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.num_turno}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.num_turno}">
+                				<h:outputLabel value="${fila.num_turno}" />
+                			</p:column>
+                			
+                			<p:column headerText="Área" width="160" style="text-align:center;"
+                				filterable="true" filterBy="#{resultadoCatalogoC.CatalogoArea(fila.id_area_atension)}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${resultadoCatalogoC.CatalogoArea(fila.id_area_atension)}">
+                				<h:outputLabel value="${resultadoCatalogoC.CatalogoArea(fila.id_area_atension)}" />
+                			</p:column>
+                			
+                			<p:column headerText="Usuario" width="160" style="text-align:center;"
+                				filterable="true" filterBy="#{resultadoCatalogoC.CatalogoUsuarios(fila.id_usuario_resp)}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${resultadoCatalogoC.CatalogoUsuarios(fila.id_usuario_resp)}">
+                				<h:outputLabel value="${resultadoCatalogoC.CatalogoUsuarios(fila.id_usuario_resp)}" />
+                			</p:column>
+                			
+                			<p:column headerText="Estatus" width="130" style="text-align:center;"
+                				filterable="true" filterBy="#{resultadoCatalogoC.CatalogoEstatus(fila.id_estatus)}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${resultadoCatalogoC.CatalogoEstatus(fila.id_estatus)}">
+                				<h:outputLabel value="${resultadoCatalogoC.CatalogoEstatus(fila.id_estatus)}" />
+                			</p:column>
+                			
+                			<p:column headerText="Año" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.anio_oficio}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.anio_oficio}">
+                				<h:outputLabel value="${fila.anio_oficio}" />
+                			</p:column>
+                			
+                			<p:column headerText="Fecha Solicitud" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{resultadoCatalogoC.cambiarFecha(fila.fecha_reg)}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${resultadoCatalogoC.cambiarFecha(fila.fecha_reg)}">
+                				<h:outputLabel value="${resultadoCatalogoC.cambiarFecha(fila.fecha_reg)}" />
+                			</p:column>
+                			
+                			<p:column headerText="Fecha Término" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{resultadoCatalogoC.cambiarFecha(fila.fec_vencimiento)}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${resultadoCatalogoC.cambiarFecha(fila.fec_vencimiento)}">
+                				<h:outputLabel value="${resultadoCatalogoC.cambiarFecha(fila.fec_vencimiento)}" />
+                			</p:column>
+                			
+                			<p:column headerText="Tipo Documento" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.num_expediente_ori}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.num_expediente_ori}">
+                				<h:outputLabel value="${fila.num_expediente_ori}" />
+                			</p:column>
+                			
+                			<p:column headerText="Tipo Documento" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.num_expediente_ori}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.num_expediente_ori}">
+                				<h:outputLabel value="${fila.num_expediente_ori}" />
+                			</p:column>
+                			
+                			<p:column headerText="Núm. Oficio Sol" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.desc_boletin}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.desc_boletin}">
+                				<h:outputLabel value="${fila.desc_boletin}" />
+                			</p:column>
+                			
+                			<p:column headerText="Abogado Responsable" width="170" style="text-align:center;"
+                				filterable="true" filterBy="#{resultadoCatalogoC.CatalogoUsuarios(fila.id_enc)}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${resultadoCatalogoC.CatalogoUsuarios(fila.id_enc)}">
+                				<h:outputLabel value="${resultadoCatalogoC.CatalogoUsuarios(fila.id_enc)}" />
+                			</p:column>
+
+                			<p:column headerText="Turnos H" width="140" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.bturnosf}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.bturnosf}">
+                				<h:outputLabel value="${fila.bturnosf}" />
+                			</p:column>
+                			
+                			<p:column headerText="Núm. Original" width="75" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.num_original}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.num_original}">
+                				<h:outputLabel value="${fila.num_original}" />
+                			</p:column>
+                			
+                			<p:column headerText="Núm. Fojas" width="75" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.num_fojas}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.num_fojas}">
+                				<h:outputLabel value="${fila.num_fojas}" />
+                			</p:column>
+                			
+                			<p:column headerText="Núm. Copias" width="75" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.num_copia}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.num_copia}">
+                				<h:outputLabel value="${fila.num_copia}" />
+                			</p:column>
+                			 
+                			<p:column headerText="Núm. Tomos" width="75" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.num_tomos}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.num_tomos}">
+                				<h:outputLabel value="${fila.num_tomos}" />
+                			</p:column>
+                			
+                			<p:column headerText="RFC" width="130" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.rfc}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.rfc}">
+                				<h:outputLabel value="${fila.rfc}" />
+                			</p:column>
+                			
+                			<p:column headerText="Termino" width="200" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.desc_termino}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.desc_termino}">
+                				<h:outputLabel value="${fila.desc_termino}" />
+                			</p:column>
+                			
+							<p:column headerText="Remitente" width="200" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.remitente}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.remitente}">
+                				<h:outputLabel value="${fila.remitente}" />
+                			</p:column>
+                			
+                			<p:column headerText="Cargo Remitente" width="200" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.cargo_remitente}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.cargo_remitente}">
+                				<h:outputLabel value="${fila.cargo_remitente}" />
+                			</p:column>
+                			
+                			<p:column headerText="Lugar" width="200" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.lugar}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.lugar}">
+                				<h:outputLabel value="${fila.lugar}" />
+                			</p:column>
+                			
+                			<p:column headerText="Asunto" width="200" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.asunto}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.asunto}">
+                				<h:outputLabel value="${fila.asunto}" />
+                			</p:column>
+                			
+                			<p:column headerText="Desc. Observación" width="240" style="text-align:center;"
+                				filterable="true" filterBy="#{fila.desc_observacion}" filterMatchMode="contains" filterStyle="width:90%"
+            					sortable="true" sortBy="${fila.desc_observacion}">
+                				<h:outputLabel value="${fila.desc_observacion}" />
+                			</p:column>
+                			
+                			
+                		</p:dataTable>
+                		
+                		<!--  
+                		<f:facet name="footer">
+                		<p:commandButton value="Regresar" action="regresar" icon="ui-icon-triangle-1-w" style="margin-right: 5px;" />
+                		<c:if test="#{UsuariosAdmin.usuarioAdmin() and bool}">
+							<p:commandButton value="Agregar" action="agregar" icon="ui-icon-add" style="margin-right: 5px;" />
+                			<p:commandButton value="Modificar" action="editar" icon="ui-icon-edit" style="margin-right: 5px;" />
+                			<p:commandButton value="Cancelar" action="cancelar" icon="ui-icon-alert" style="margin-right: 5px;" />
+                			<p:commandButton value="Reporte" action="reporte" icon="ui-icon-document" style="margin-right: 5px;" />
+   						</c:if>
+   						<c:if test="#{UsuariosAdmin.usuarioAdmin() and !bool}">
+							<p:commandButton value="Agregar" action="agregar" icon="ui-icon-add" style="margin-right: 5px;" />
+   						</c:if>
+   						<c:if test="#{!UsuariosAdmin.usuarioAdmin() and bool}">
+                			<p:commandButton value="Modificar" action="editar" icon="ui-icon-edit" style="margin-right: 5px;" />
+   						</c:if>
+                		</f:facet>
+                		-->
+                	</p:panel>
+                	
+                	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                </h:form>
+                <h:form>
+					<p:confirmDialog global="true">
+						<p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" style="background-color:#691B31;" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" style="background-color:#691B31;"/>
+					</p:confirmDialog>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				</h:form>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

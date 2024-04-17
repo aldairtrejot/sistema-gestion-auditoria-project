@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/views/templates/default/template.xhtml">
+
+	<ui:define name="content">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<h:form>
+					<p:panel id="panelReporte" header="GENERADOR DE REPORTES">
+					<h4>Para generar su reporte es necesario presionar el boton de Descarga</h4>
+					<!--  
+     			   <p:tabView>
+          			  <p:tab title="URL">
+              			  <pe:documentViewer height="500" url="/resources/reporte/REPORTE_PLANTILLA.pdf"/>
+          			  </p:tab>
+           			  <p:tab title="Resource">
+            		    <pe:documentViewer height="500" library="reporte" name="REPORTE_PLANTILLA.pdf" zoom="page-width"/>
+         			   </p:tab>
+          			  <p:tab title="StreamedContent">
+             			   <pe:documentViewer height="500" value="#{basicDocumentViewerController.content}" zoom="page-width"/>
+          			  </p:tab>
+       			 </p:tabView>
+				-->
+						<f:facet name="footer">
+                			<p:commandButton value="Regresar" action="regresar" icon="ui-icon-triangle-1-w" style="margin-right: 5px;" />	
+							<p:commandButton value="Descargar" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+                        	   icon="ui-icon-arrow-1-s" styleClass="mr-2">
+          					  <p:fileDownload value="#{fileDownloadView.imprimir(correspondencia)}"/>
+        					</p:commandButton>
+						</f:facet>
+						</p:panel>
+
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</h:form>
+
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

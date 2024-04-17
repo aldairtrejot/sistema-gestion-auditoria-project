@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jstl/core"
+                template="/WEB-INF/views/templates/default/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form>
+                	<p:focus for="${expediente.id == null ? p:resolveFirstComponentWithId('inputanio_oficio', view).clientId : p:resolveFirstComponentWithId('inputanio_oficio', view).clientId}" />
+                	<p:growl autoUpdate="true" />
+                	<p:panel header="${oficio.id == null ? 'Agregar' : 'Editar'} Control de Oficios de la Secretaría de Hacienda"> 
+                			<p:panelGrid columns="2">
+								
+								<p:outputLabel for="@next" value="Año" style="font-weight: bold"  />
+								<p:selectOneMenu value="#{oficio.anio}" style="width: 25% !important" disabled="${oficio.id != null}">
+									<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoC.catAnioList}" />
+								</p:selectOneMenu>
+	                			
+	                			<c:if test="${UsuariosAdmin.usuarioAdmin()}">
+                				<p:outputLabel for="id_area" value="Área" style="font-weight: bold" />
+								<p:selectOneMenu id="id_area" value="#{oficio.id_area}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" style="width: 45% !important">
+									<p:ajax listener="#{catalogoC.cambioUsuariosArea(oficio.id_area)}" event="focus" process="@this" update="cat_area_usuarios" />
+									<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoC.catAreaList}"/>
+								</p:selectOneMenu>
+
+								<p:outputLabel for="cat_area_usuarios" value="Usuario" style="font-weight: bold"  />
+								<p:selectOneMenu id="cat_area_usuarios" value="#{oficio.id_usuario_sol}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" style="width: 45% !important">
+									<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoC.catAreaUserList}" />
+								</p:selectOneMenu>
+   								</c:if>
+   								
+   								<c:if test="${!UsuariosAdmin.usuarioAdmin()}">
+                				<p:outputLabel for="@next" value="Área" style="font-weight: bold" />
+								<p:inputText value="${resultadoCatalogoC.CatalogoArea(oficio.id_area)}" disabled="true" size="45" />
+
+								<p:outputLabel for="@next" value="Usuario" style="font-weight: bold"  />
+								<p:inputText value="${resultadoCatalogoC.CatalogoUsuariosSys(oficio.id_usuario_sol)}" disabled="true" size="45" />
+   								</c:if>
+								
+								<p:outputLabel for="@next" value="Núm. Oficio" style="font-weight: bold;" />
+	                			<p:inputText id="inputofnum_oficiox" value="${oficio.num_oficio}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="45">
+	                				<f:validateLength maximum="30"/>
+								</p:inputText>
+									                			
+	                			<p:outputLabel for="@next" value="Documento Asociado" style="font-weight: bold;" />
+	                			<p:inputText id="inputofnum_turno_orig" value="${oficio.num_turno_orig}" size="45">
+	                				<f:validateLength maximum="40"/>
+								</p:inputText>
+								
+	                			<p:outputLabel for="@next" value="Fecha Solicitud" style="font-weight: bold;" />
+	                			<p:calendar id="inputoffecha_solicitud" value="#{oficio.fecha_solicitud}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" locale="es" mode="popup" size="45"/>
+	                			
+	                			<p:outputLabel for="@next" value="Fecha Recepción" style="font-weight: bold;" />
+	                			<p:calendar id="inputoffecha_Acuse" value="#{oficio.fecha_acuse}" locale="es" mode="popup" size="45"/>
+	                			
+	                			<p:outputLabel for="@next" value="Remitente" style="font-weight: bold;" />
+	                			<p:inputText id="inputofpremitente" value="${oficio.remitente}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="105">
+	                				<f:validateLength maximum="150"/>
+								</p:inputText>
+	                			
+	                			<p:outputLabel for="@next" value="Desc. Asunto" style="font-weight: bold;" />
+	                			<p:inputText id="inputofdesc_asunto" value="${oficio.desc_asunto}" disabled="#{!UsuariosAdmin.usuarioAdmin()}" size="105">
+	                				<f:validateLength maximum="150"/>
+								</p:inputText>
+	                				                			
+	                			<p:outputLabel for="@next" value="Desc. Observaciones" style="font-weight: bold;" />
+	                			<h:inputTextarea id="inputofdesc_observaciones" value="${oficio.desc_observaciones}" cols="110" rows="6" 
+									style="font-family: Roboto,Helvetica Neue,sans-serif;border-color: #bdbdbd;">
+									<f:validateLength maximum="500"/>
+								</h:inputTextarea>
+
+	                		</p:panelGrid>
+                		
+                		<f:facet name="footer">
+                			<p:commandButton value="Guardar" action="guardar" icon="ui-icon-save" style="margin-right: 5px;" />
+                			<p:commandButton value="Cancelar" action="cancelar" icon="ui-icon-clear" immediate="true" style="margin-right: 5px;" />
+                		</f:facet>
+                	</p:panel>
+                	
+                	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                </h:form>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

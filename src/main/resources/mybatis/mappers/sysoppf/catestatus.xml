@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat_estatus">
+	<cache />
+	<resultMap type="CatEstatusEO" id="cat_estatus">
+		<id column="CatEstatusEO_id" property="id" javaType="Integer"/>
+		<result column="CatEstatusEO_desc_estatus" property="desc_estatus" javaType="String"/>
+	</resultMap>
+	
+	<sql id="table">
+		cat_estatus CatEstatusEO
+	</sql>
+	
+	<sql id="fields">
+		CatEstatusEO.id_estatus					CatEstatusEO_id,
+		CatEstatusEO.desc_estatus				CatEstatusEO_desc_estatus
+	</sql>
+	
+	<sql id="query">
+		SELECT <include refid="fields" />
+		FROM <include refid="table" />
+	</sql>
+	
+	<select id="listado" resultMap="cat_estatus" >
+		<include refid="query" />
+		ORDER BY CatEstatusEO_id ASC
+	</select>
+	
+	<select id="listadoString" resultType="String" parameterType="Integer" >
+		SELECT CatEstatusEO.desc_estatus
+		FROM <include refid="table" />
+		WHERE CatEstatusEO.id_estatus = #{id}
+	</select>
+</mapper>
+

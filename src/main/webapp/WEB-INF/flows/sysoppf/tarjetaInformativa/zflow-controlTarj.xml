@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://saganet.com.mx/webflow/spring-webflow-2.0.xsd">
+
+<view-state id="listadoBusqueda">
+		<on-entry>
+			<evaluate expression="TblTarjetaInfoC.nuevo()" result="viewScope.tarjeta" />
+		</on-entry>
+	
+		<transition on="buscar" to="listado">
+			<set name="flowScope.tarjetaAux" value="viewScope.tarjeta" />
+		</transition>
+		
+		<transition on="limpiar" to="listadoBusqueda"/>
+	</view-state>
+
+	<view-state id="listado">
+		<on-entry>
+			<evaluate expression="TblTarjetaInfoC.modelo(tarjetaAux)" result="viewScope.modelo" />
+			<evaluate expression="TblTarjetaInfoC.ObjectNull(viewScope.modelo.listado)" result="viewScope.bool" />
+		</on-entry>
+	
+		<transition on="agregar" to="agregarEditar">
+			<evaluate expression="TblTarjetaInfoC.nuevo()" result="requestScope.tarjeta" />
+		</transition>
+		
+		<transition on="editar" to="agregarEditar">
+			<set name="requestScope.tarjeta" value="viewScope.modelo.seleccionado" />
+		</transition>
+		
+		<transition on="regresar" to="listadoBusqueda"/>
+	</view-state>
+	
+	<view-state id="agregarEditar">
+		<on-entry>
+			<set name="viewScope.cveNom" value="TblTarjetaInfoC.getCveNom" />
+			<set name="viewScope.tarjeta" value="requestScope.tarjeta" />
+		</on-entry>
+		
+		<transition on="guardar" to="listado">
+			<evaluate expression="TblTarjetaInfoC.guardar(viewScope.tarjeta)" />
+		</transition>
+		
+		<transition on="cancelar" to="listado" />
+	</view-state>
+	
+	<end-state id="terminarFlujo" />
+
+</flow>

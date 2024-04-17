@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user_solicita">
+	<cache />
+	<resultMap type="UserSolicitaEO" id="user_solicita">
+		<id column="UserSolicitaEO_id_usuario_sol" property="id_usuario_sol" javaType="Integer"/>
+		<result column="UserSolicitaEO_usuario_sol" property="usuario_sol" javaType="String"/>
+	</resultMap>
+	
+	<sql id="fields">
+		UserSolicitaEO.id_usuario_sol		UserSolicitaEO_id_usuario_sol,
+		UserSolicitaEO.usuario_sol			UserSolicitaEO_usuario_sol
+	</sql>
+	
+	<sql id="table">
+		user_solicita UserSolicitaEO
+	</sql>
+	
+	<sql id="query">
+		SELECT <include refid="fields" />
+		FROM <include refid="table" />
+	</sql>
+	
+	<select id="listado" resultMap="user_solicita" parameterType="Integer" >
+		<include refid="query" />
+		INNER JOIN <include refid="user_sol_area.table" />
+		ON UserSolicitaEO.id_usuario_sol = UserSolAreaEO.id_usuario_sol 
+		INNER JOIN <include refid="cat_area.table" />
+		ON CatAreaEO.id_area = UserSolAreaEO.id_area
+		<if test = "id != null"> 
+ 			WHERE CatAreaEO.id_area = #{id}
+		</if>
+		ORDER BY UserSolicitaEO_usuario_sol ASC
+	</select>
+	
+	<select id="listadoUser" resultMap="user_solicita" >
+		<include refid="query" />
+	</select>
+	
+	<select id="listadoString" resultType="String" parameterType="Integer" >
+		SELECT UserSolicitaEO.usuario_sol
+		FROM <include refid="table" />
+		WHERE UserSolicitaEO.id_usuario_sol = #{id}
+	</select>
+	
+</mapper>
+

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://saganet.com.mx/webflow/spring-webflow-2.0.xsd">
+
+<view-state id="listadoBusqueda">
+		<on-entry>
+			<evaluate expression="TblturnoC.nuevo()" result="viewScope.correspondencia" />
+		</on-entry>
+	
+		<transition on="buscar" to="listadoCorrespondencia">
+			<set name="flowScope.correspondenciaAux" value="viewScope.correspondencia" />
+		</transition>
+		
+		<transition on="limpiar" to="listadoBusqueda"/>
+	</view-state>
+
+	<view-state id="listadoCorrespondencia">
+		<on-entry>
+			<evaluate expression="TblturnoC.modelo(correspondenciaAux)" result="viewScope.modelo" />
+			<evaluate expression="TblturnoC.ObjectNull(viewScope.modelo.listado)" result="viewScope.bool" />
+		</on-entry>
+	
+		<transition on="agregar" to="agregarEditarCorrespondencia">
+			<evaluate expression="TblturnoC.nuevo()" result="requestScope.correspondencia" />
+		</transition>
+		
+		<transition on="editar" to="agregarEditarCorrespondencia">
+			<set name="requestScope.correspondencia" value="viewScope.modelo.seleccionado" />
+		</transition>
+		
+		<transition on="cancelar" to="cancelar">
+			<set name="requestScope.correspondencia" value="viewScope.modelo.seleccionado" />
+		</transition>
+		
+		<transition on="reporte" to="reporte" >
+		   <set name="requestScope.correspondencia" value="viewScope.modelo.seleccionado" />
+		</transition>
+		
+		<transition on="regresar" to="listadoBusqueda"/>
+	</view-state>
+	
+	<view-state id="agregarEditarCorrespondencia">
+		<on-entry>
+		 	<set name="viewScope.cveNom" value="TblturnoC.getCveNom" />
+			<set name="viewScope.correspondencia" value="requestScope.correspondencia" />
+			<set name="viewScope.fechaAnt" value="requestScope.correspondencia.getFecha_reg()" />
+		</on-entry>
+		
+		<transition on="guardar" to="listadoCorrespondencia">
+			<evaluate expression="TblturnoC.guardar(viewScope.correspondencia)" />
+		</transition>
+		
+		<transition on="cancelar" to="listadoCorrespondencia" />
+	</view-state>
+	
+	<view-state id="cancelar">
+		<on-entry>
+			<set name="viewScope.correspondencia" value="requestScope.correspondencia" />
+		</on-entry>
+		
+		<transition on="guardar" to="listadoCorrespondencia">
+					   <evaluate expression="TblturnoC.editarEstatus(viewScope.correspondencia)" />
+		</transition>
+		
+		<transition on="cancelar" to="listadoCorrespondencia" />
+	</view-state>
+	
+	<view-state id="reporte">
+		<on-entry>
+			<set name="viewScope.correspondencia" value="requestScope.correspondencia" />
+		</on-entry>
+		<transition on="regresar" to="listadoCorrespondencia" />
+	</view-state>
+	<end-state id="terminarFlujo" />
+
+</flow>

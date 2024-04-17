@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://saganet.com.mx/webflow/spring-webflow-2.0.xsd">
+
+<view-state id="listadoBusqueda">
+		<on-entry>
+			<evaluate expression="TblCircularC.nuevo()" result="viewScope.circular" />
+		</on-entry>
+	
+		<transition on="buscar" to="listado">
+			<set name="flowScope.circularAux" value="viewScope.circular" />
+		</transition>
+		
+		<transition on="limpiar" to="listadoBusqueda"/>
+	</view-state>
+
+	<view-state id="listado">
+		<on-entry>
+			<evaluate expression="TblCircularC.modelo(circularAux)" result="viewScope.modelo" />
+			<evaluate expression="TblCircularC.ObjectNull(viewScope.modelo.listado)" result="viewScope.bool" />
+		</on-entry>
+	
+		<transition on="agregar" to="agregarEditar">
+			<evaluate expression="TblCircularC.nuevo()" result="requestScope.circular" />
+		</transition>
+		
+		<transition on="editar" to="agregarEditar">
+			<set name="requestScope.circular" value="viewScope.modelo.seleccionado" />
+		</transition>
+		
+		<transition on="regresar" to="listadoBusqueda"/>
+	</view-state>
+	
+	<view-state id="agregarEditar">
+		<on-entry>
+			<set name="viewScope.cveNom" value="TblCircularC.getCveNom" />
+			<set name="viewScope.circular" value="requestScope.circular" />
+		</on-entry>
+		
+		<transition on="guardar" to="listado">
+			<evaluate expression="TblCircularC.guardar(viewScope.circular)" />
+		</transition>
+		
+		<transition on="cancelar" to="listado" />
+	</view-state>
+	
+	<end-state id="terminarFlujo" />
+
+</flow>

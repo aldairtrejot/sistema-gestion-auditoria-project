@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tbl_turno">
+	<cache />
+	
+	<resultMap type="TblturnoEO" id="tbl_turno">
+		<id column="TblturnoEO_id" property="id" javaType="Integer"/>
+		<result column="TblturnoEO_anio_oficio" property="anio_oficio" javaType="Integer"/>
+		<result column="TblturnoEO_num_expediente_ori" property="num_expediente_ori" javaType="String"/>
+		<result column="TblturnoEO_num_oficio" property="num_oficio" javaType="String"/>
+		<result column="TblturnoEO_fecha_reg" property="fecha_reg" javaType="Date"/>
+		<result column="TblturnoEO_num_turno" property="num_turno" javaType="String"/>
+		<result column="TblturnoEO_remitente" property="remitente" javaType="String"/>
+		<result column="TblturnoEO_cargo_remitente" property="cargo_remitente" javaType="String"/>
+		<result column="TblturnoEO_lugar" property="lugar" javaType="String"/>
+		<result column="TblturnoEO_asunto" property="asunto" javaType="String"/>
+		<result column="TblturnoEO_id_area_atension" property="id_area_atension" javaType="Integer"/>
+		<result column="TblturnoEO_id_usuario_resp" property="id_usuario_resp" javaType="Integer"/>
+		<result column="TblturnoEO_bturnosf" property="bturnosf" javaType="String"/>
+		<result column="TblturnoEO_desc_observacion" property="desc_observacion" javaType="String"/>
+		<result column="TblturnoEO_desc_termino" property="desc_termino" javaType="String"/>
+		<result column="TblturnoEO_desc_boletin" property="desc_boletin" javaType="String"/>
+		<result column="TblturnoEO_desc_conclusion" property="desc_conclusion" javaType="String"/>
+		<result column="TblturnoEO_desc_ejecucion" property="desc_ejecucion" javaType="String"/>
+		<result column="TblturnoEO_num_original" property="num_original" javaType="Integer"/>
+		<result column="TblturnoEO_num_fojas" property="num_fojas" javaType="Integer"/>
+		<result column="TblturnoEO_num_copia" property="num_copia" javaType="Integer"/>
+		<result column="TblturnoEO_fec_vencimiento" property="fec_vencimiento" javaType="Date"/>
+		<result column="TblturnoEO_fec_registro" property="fec_registro" javaType="Date"/>
+		<result column="TblturnoEO_id_estatus" property="id_estatus" javaType="Integer"/>
+		<result column="TblturnoEO_num_tomos" property="num_tomos" javaType="Integer"/>
+		<result column="TblturnoEO_turno_sin" property="turno_sin" javaType="String"/>
+		<result column="TblturnoEO_rfc" property="rfc" javaType="String"/>
+		<result column="TblturnoEO_id_enc" property="id_enc" javaType="Integer"/>
+	</resultMap>
+
+	<sql id="fields">
+		TblturnoEO.id_turno						TblturnoEO_id,
+		TblturnoEO.anio_oficio					TblturnoEO_anio_oficio,
+		TblturnoEO.num_expediente_ori			TblturnoEO_num_expediente_ori,
+		TblturnoEO.num_oficio					TblturnoEO_num_oficio,
+		TblturnoEO.fecha_reg					TblturnoEO_fecha_reg,
+		TblturnoEO.num_turno					TblturnoEO_num_turno,
+		TblturnoEO.remitente					TblturnoEO_remitente,
+		TblturnoEO.cargo_remitente				TblturnoEO_cargo_remitente,
+		TblturnoEO.lugar						TblturnoEO_lugar,
+		TblturnoEO.asunto						TblturnoEO_asunto,
+		TblturnoEO.id_area_atension				TblturnoEO_id_area_atension,
+		TblturnoEO.id_usuario_resp				TblturnoEO_id_usuario_resp,
+		TblturnoEO.bturnosf						TblturnoEO_bturnosf,
+		TblturnoEO.desc_observacion				TblturnoEO_desc_observacion,
+		TblturnoEO.desc_termino					TblturnoEO_desc_termino,
+		TblturnoEO.desc_boletin					TblturnoEO_desc_boletin,
+		TblturnoEO.desc_conclusion				TblturnoEO_desc_conclusion,
+		TblturnoEO.desc_ejecucion				TblturnoEO_desc_ejecucion,
+		TblturnoEO.num_original					TblturnoEO_num_original,
+		TblturnoEO.num_fojas					TblturnoEO_num_fojas,
+		TblturnoEO.num_copia					TblturnoEO_num_copia,
+		TblturnoEO.fec_vencimiento				TblturnoEO_fec_vencimiento,
+		TblturnoEO.fec_registro					TblturnoEO_fec_registro,
+		TblturnoEO.id_estatus					TblturnoEO_id_estatus,
+		TblturnoEO.num_tomos					TblturnoEO_num_tomos,
+		TblturnoEO.turno_sin					TblturnoEO_turno_sin,
+		TblturnoEO.rfc							TblturnoEO_rfc,
+		TblturnoEO.id_enc						TblturnoEO_id_enc
+	</sql>
+	
+	<sql id="table">
+		tbl_turno TblturnoEO
+	</sql>
+	
+	<sql id="query">
+		SELECT <include refid="fields" />
+		FROM <include refid="table" />
+	</sql>
+	
+	<select id="listado" resultMap="tbl_turno" parameterType="java.util.Map">
+		<include refid="query" />
+		INNER JOIN 	<include refid="cat_area.table" />
+		ON TblturnoEO.id_area_atension = CatAreaEO.id_area
+		INNER JOIN <include refid="user_sist_area.table" />
+		ON CatAreaEO.id_area = UsuarioSysAreaEO.id_area
+		INNER JOIN 	<include refid="usuarios.table" />
+		ON UsuarioSysAreaEO.id_usuario = UsuarioEO.id_usuario
+		WHERE UsuarioEO.id_usuario = #{usuarioSys}
+			<if test = "fechaInicio != null and fechaFinal == null"> 
+ 				 WHERE fecha_reg = '${fechaInicio}'
+			</if>
+			<if test = "fechaInicio == null and fechaFinal != null"> 
+ 				 WHERE fecha_reg = '${fechaFinal}'
+			</if>
+			<if test = "fechaInicio != null and fechaFinal != null"> 
+ 				 WHERE fecha_reg BETWEEN '${fechaInicio}' AND '${fechaFinal}'
+			</if>
+		ORDER BY TblturnoEO_id DESC;
+	</select>
+	
+	<select id="listadoAdmin" resultMap="tbl_turno" parameterType="java.util.Map" >
+		<include refid="query" />
+			 <if test = "fechaInicio != null and fechaFinal == null"> 
+ 				 WHERE fecha_reg = '${fechaInicio}'
+			</if>
+			<if test = "fechaInicio == null and fechaFinal != null"> 
+ 				 WHERE fecha_reg = '${fechaFinal}'
+			</if>
+			<if test = "fechaInicio != null and fechaFinal != null"> 
+ 				 WHERE fecha_reg BETWEEN '${fechaInicio}' AND '${fechaFinal}'
+			</if>
+		ORDER BY TblturnoEO_id DESC;
+	</select>
+	
+	<select id="listadoTurno" resultType="Integer" parameterType="String" >
+		SELECT TblturnoEO.id_turno
+		FROM <include refid="table" />
+		WHERE TblturnoEO.num_turno = '${numTurno}'
+	</select>
+	
+	<insert id="agregar" parameterType="java.util.Map">
+		INSERT INTO tbl_turno(anio_oficio,num_expediente_ori,num_oficio,fecha_reg,num_turno,remitente,cargo_remitente,
+							  lugar,asunto,id_area_atension,id_usuario_resp,bturnosf,desc_observacion,desc_termino,
+							  desc_boletin,desc_conclusion,num_fojas,desc_ejecucion,num_copia,fec_vencimiento,fec_registro,
+							  id_estatus,num_tomos,turno_sin,rfc,num_original,id_enc)
+		VALUES (#{tbl_turno.anio_oficio},#{tbl_turno.num_expediente_ori},#{tbl_turno.num_oficio},#{tbl_turno.fecha_reg},
+			    #{tbl_turno.num_turno},#{tbl_turno.remitente},#{tbl_turno.cargo_remitente},#{tbl_turno.lugar},#{tbl_turno.asunto},
+			    #{tbl_turno.id_area_atension},#{tbl_turno.id_usuario_resp},#{tbl_turno.bturnosf},#{tbl_turno.desc_observacion},
+			    #{tbl_turno.desc_termino},#{tbl_turno.desc_boletin},#{tbl_turno.desc_conclusion},#{tbl_turno.num_fojas},
+			    #{tbl_turno.desc_ejecucion},#{tbl_turno.num_copia},#{tbl_turno.fec_vencimiento},NOW(),#{tbl_turno.id_estatus},
+			    #{tbl_turno.num_tomos},#{tbl_turno.turno_sin},#{tbl_turno.rfc},#{tbl_turno.num_original},#{tbl_turno.id_enc});
+	</insert>
+	
+	<update id="editar" parameterType="java.util.Map">
+		UPDATE tbl_turno
+		SET anio_oficio=#{tbl_turno.anio_oficio},num_expediente_ori=#{tbl_turno.num_expediente_ori},num_oficio=#{tbl_turno.num_oficio},
+			fecha_reg=#{tbl_turno.fecha_reg},num_turno=#{tbl_turno.num_turno},remitente=#{tbl_turno.remitente},
+			cargo_remitente=#{tbl_turno.cargo_remitente},lugar=#{tbl_turno.lugar},asunto=#{tbl_turno.asunto},
+			id_area_atension=#{tbl_turno.id_area_atension},id_usuario_resp=#{tbl_turno.id_usuario_resp},
+			bturnosf=#{tbl_turno.bturnosf},desc_observacion=#{tbl_turno.desc_observacion},desc_termino= #{tbl_turno.desc_termino},
+			desc_boletin=#{tbl_turno.desc_boletin},desc_conclusion=#{tbl_turno.desc_conclusion},num_fojas=#{tbl_turno.num_fojas},
+			desc_ejecucion=#{tbl_turno.desc_ejecucion},num_copia=#{tbl_turno.num_copia},fec_vencimiento=#{tbl_turno.fec_vencimiento},
+			fec_registro=NOW(),id_estatus=#{tbl_turno.id_estatus},num_tomos=#{tbl_turno.num_tomos},turno_sin=#{tbl_turno.turno_sin},
+			rfc=#{tbl_turno.rfc},num_original=#{tbl_turno.num_original},id_enc=#{tbl_turno.id_enc}
+		WHERE id_turno=#{tbl_turno.id}
+	</update>
+	
+	<update id="editarEstatus" parameterType="java.util.Map">
+		UPDATE tbl_turno
+		SET id_estatus = #{cancelado}
+		WHERE id_turno=#{id}
+	</update>
+
+</mapper>
+

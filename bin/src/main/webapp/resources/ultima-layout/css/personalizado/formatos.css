@@ -1,0 +1,27 @@
+.dialogoPersonas{
+	width: 70%;
+}
+.columnaTitulo{
+	background: #777777;
+	color: white;
+	font-weight: bold;
+}
+.columna{
+}
+.fila{
+}
+.tabla{
+}
+.columnaPantallaDividida{
+	width: 50%;
+	vertical-align: top;
+	text-align: center;
+}
+@media (max-width: 1367px) {
+	.columna{
+	}
+}
+@media (max-width: 640px) {
+	.columna{
+	}
+}

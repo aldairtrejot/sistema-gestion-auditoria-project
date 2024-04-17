@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pu="http://primefaces.org/ultima"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<div class="topbar clearfix">
+		<div class="topbar-left">
+			<div class="logo"></div>
+		</div>
+
+		<div class="topbar-right">
+			<a id="menu-button" href="#"> <i></i>
+			</a> <a id="topbar-menu-button" href="#"> <i class="material-icons">&#xE5D4;</i>
+			</a>
+
+			<ul class="topbar-items fadeInDown animated">
+				<li><sec:authorize ifAnyGranted="ROLE_USUARIO">
+						<a href="#"> <i class="topbar-icon material-icons">&#xE8B8;</i>
+							<span class="topbar-item-name">Configuración</span>
+						</a>
+						<ul class="ultima-menu animated">
+						<li><sec:authorize ifAnyGranted="ROLE_ADMINISTRACION">
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/administracion/usuarios"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">person</i> <span>Usuarios</span>
+							</a></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/administracion/grupos"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">&#xE7EF;</i> <span>Grupos</span>
+							</a></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/administracion/roles"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">&#xE7EF;</i> <span>Roles</span>
+							</a></li>
+							</sec:authorize></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/sysoppf/controlCorrespondencia"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">folder_open</i> <span>Control de Correspondencia</span>
+							</a></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/sysoppf/oficios"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">folder_open</i> <span>Oficios</span>
+							</a></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/sysoppf/controlExpedientes"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">folder_open</i> <span>Control de Expedientes</span>
+							</a></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/sysoppf/oficiosfp"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">folder_open</i> <span>Secretaría de Hacienda</span>
+							</a></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/sysoppf/tarjetaInformativa"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">folder_open</i> <span>Tarjeta Informativa</span>
+							</a></li>
+							
+							<li role="menuitem"><a
+								href="${request.contextPath}/app/sysoppf/circular"
+								onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' });">
+									<i class="material-icons">folder_open</i> <span>Circular</span>
+							</a></li>
+
+							<li role="menuitem">
+								<a href="#" onclick="PF('me').clearMenuState(); $.removeCookie('ultima_inlineprofile_expanded', { path: '/' }); document.getElementById('${p:resolveFirstComponentWithId('menuform', view).clientId}').action='${request.contextPath}/logout'; document.getElementById('${p:resolveFirstComponentWithId('menuform', view).clientId}').submit();">
+                                    <i class="material-icons">&#xE8AC;</i>
+                                    <span>Salir</span>
+                                </a>
+                            </li>
+                            
+						</ul>
+					</sec:authorize></li>
+			</ul>
+		</div>
+	</div>
+
+</ui:composition>
